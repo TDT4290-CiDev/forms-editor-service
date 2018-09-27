@@ -5,9 +5,6 @@ from flask_pymongo import PyMongo
 app = Flask(__name__)
 
 
-
-
-
 #Running mongoDB on local host. Requires mongoDB to be installed and run locally. Must be generalized/dockerized
 app.config['MONGO_DBNAME'] = 'form'
 app.config['MONGO_URI'] = 'mongodb://localhost:27017/form'
@@ -49,7 +46,7 @@ def add_form():
     form = mongo.db.form 
 
     name = request.json['name']
-    
+
     form_id = form.insert({'name' : name})
     new_form = form.find_one({'_id' : form_id})
 
