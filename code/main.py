@@ -1,25 +1,34 @@
 from flask import Flask, jsonify, request
-from flask_pymongo import PyMongo
+from pymongo import MongoClient
 
 
 app = Flask(__name__)
 
 
 #Running mongoDB on local host. Requires mongoDB to be installed and run locally. Must be generalized/dockerized
+
+client = MongoClient('mongodb://datastore:27017/dockerdemo')
+
+"""
 app.config['MONGO_DBNAME'] = 'form'
 app.config['MONGO_URI'] = 'mongodb://localhost:27017/form'
 
 mongo = PyMongo(app)
+"""
 
+db = client.cidevdb
+
+form_collection = db.form
 
 
 @app.route('/')
 def hello_docker():
-    return 'Hello Docker friends!'
+	form_collection.insert_one({'name': 'TreeCuttingForm'})
+	return 'Hello friends! I have just inserted a form'
 
-@app.route('/form', methods=['GET'])
+@app.route('/get_forms', methods=['GET'])
 def get_all_forms():
-    form = mongo.db.form 
+    form = form_collection 
 
     output = []
 
@@ -30,7 +39,7 @@ def get_all_forms():
 
 @app.route('/form/<name>', methods=['GET'])
 def get_one_form(name):
-    form = mongo.db.form
+    form = form_collection
 
     q = form.find_one({'name' : name})
 
@@ -43,11 +52,11 @@ def get_one_form(name):
 
 @app.route('/form', methods=['POST'])
 def add_form():
-    form = mongo.db.form 
+    form = form_collection 
 
     name = request.json['name']
 
-    form_id = form.insert({'name' : name})
+    form_id = form.insert_one({'name' : name})
     new_form = form.find_one({'_id' : form_id})
 
     output = {'name' : new_form['name']}
