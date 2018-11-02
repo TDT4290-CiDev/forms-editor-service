@@ -30,7 +30,7 @@ def add_form():
         form = request.get_json()
 #       TODO: additional checks for required parameters in json object
         form_collection.add_form(form)
-        return jsonify({'message': 'hello! Successfully inserted document'}), 201
+        return jsonify({'message': 'Successfully inserted document'}), 201
 
     except ValueError:
         return jsonify({'message': 'Credentials not provied'}), 401
@@ -64,7 +64,7 @@ def delete_one_form(id):
 if __name__ == '__main__':
 
     app.run(debug=True, host='0.0.0.0', port=8080)
- 
+
 
 
 
