@@ -1,8 +1,10 @@
 from flask import Flask, jsonify, request
 from form_collection import FormCollection
+from http import HTTPStatus
 
 
 app = Flask(__name__)
+
 form_collection = FormCollection()
 
 
@@ -12,57 +14,36 @@ def get_all_forms():
     return jsonify({'all_forms': forms})
 
 
-@app.route('/<id>', methods=['GET'])
-def get_one_form(id):
-    if id < 0:
-        return jsonify({'message': 'invalid id'}), 401
-    try:
-        form = form_collection.get_form_by_id(id)
-
-        return jsonify({'form': form})
-    except ValueError:
-        return jsonify({'message': 'form does not exist'}), 404
+@app.route('/<fid>', methods=['GET'])
+def get_one_form(fid):
+    form = form_collection.get_one_form(fid)
+    return jsonify({'form': form})
 
 
 @app.route('/', methods=['POST'])
 def add_form():
-    try:
-        form = request.get_json()
-#       TODO: additional checks for required parameters in json object
-        id = form_collection.add_form(form)
-        return jsonify({'message': 'Successfully inserted document', 'id': id}), 201
-
-    except ValueError:
-        return jsonify({'message': 'Credentials not provied'}), 401
+    form = request.get_json()
+    fid = form_collection.add_form(form)
+    return fid, HTTPStatus.CREATED 
 
 
-@app.route('/<id>', methods=['PUT'])
-def update_one_form(id):
-    if id < 0:
-        return jsonify({'message': 'invalid id'}), 401
-    try:
-        updates = request.get_json()
-        form_collection.update_one_form(id, updates)
-        return jsonify({'message': 'Successfully updated doc'}), 200
-
-    except ValueError:
-        return jsonify({'message': 'form does not exist'}), 404
+@app.route('/<fid>', methods=['PUT'])
+def update_one_form(fid):
+    body = request.get_json()
+    form_collection.update_one_form(fid, body)
+    return 'Successfully updated document'
 
 
-@app.route('/<id>', methods=['DELETE'])
-def delete_one_form(id):
-    if id < 0:
-        return jsonify({'message': 'invalid id'}), 401
-    try:
-        form_collection.delete_form_by_id(id)
-
-        return jsonify({'message': 'form successfully deleted'}), 200
-    except ValueError:
-        return jsonify({'message': 'form does not exist'}), 404
+@app.route('/<fid>', methods=['DELETE'])
+def delete_one_form(fid):
+    successfully_deleted = form_collection.delete_one_form(id)
+    if successfully_deleted:
+        return '', HTTPStatus.NO_CONTENT
+    else:
+        return 'Form with id %d does not exist', HTTPStatus.NOT_FOUND
 
 
 if __name__ == '__main__':
-
     app.run(debug=True, host='0.0.0.0', port=8080)
 
 
