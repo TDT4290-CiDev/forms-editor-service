@@ -29,8 +29,8 @@ def add_form():
     try:
         form = request.get_json()
 #       TODO: additional checks for required parameters in json object
-        form_collection.add_form(form)
-        return jsonify({'message': 'Successfully inserted document'}), 201
+        id = form_collection.add_form(form)
+        return jsonify({'message': 'Successfully inserted document', 'id': id}), 201
 
     except ValueError:
         return jsonify({'message': 'Credentials not provied'}), 401
