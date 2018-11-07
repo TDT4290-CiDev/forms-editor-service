@@ -36,7 +36,7 @@ def update_one_form(fid):
 
 @app.route('/<fid>', methods=['DELETE'])
 def delete_one_form(fid):
-    successfully_deleted = form_collection.delete_one_form(id)
+    successfully_deleted = form_collection.delete_one_form(fid)
     if successfully_deleted:
         return '', HTTPStatus.NO_CONTENT
     else:
