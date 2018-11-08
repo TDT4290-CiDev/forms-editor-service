@@ -11,13 +11,13 @@ form_collection = FormCollection()
 @app.route('/', methods=['GET'])
 def get_all_forms():
     forms = form_collection.get_all_forms()
-    return jsonify({'all_forms': forms})
+    return jsonify({'data': forms})
 
 
 @app.route('/<fid>', methods=['GET'])
 def get_one_form(fid):
     form = form_collection.get_one_form(fid)
-    return jsonify({'form': form})
+    return jsonify({'data': form})
 
 
 @app.route('/', methods=['POST'])
