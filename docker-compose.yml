@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+    forms-editor-datastore:
+      image: mongo:3.0.2
+      networks:
+          - forms-editor
+    forms-editor-service:      
+      build: .
+      command: python -u main.py
+      ports:
+        - "8080:8080"
+      networks:
+          - forms-editor
+networks:
+    forms-editor:
+
