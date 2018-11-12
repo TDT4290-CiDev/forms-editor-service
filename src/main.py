@@ -19,8 +19,8 @@ def get_one_form(fid):
     try:
         form = form_collection.get_one_form(fid)
         return jsonify({'data': form})
-    except ValueError:
-        return 'Form with id {} does not exist'.format(fid), HTTPStatus.NOT_FOUND
+    except ValueError as e:
+        return str(e), HTTPStatus.NOT_FOUND
 
 
 @app.route('/', methods=['POST'])
@@ -36,8 +36,8 @@ def update_one_form(fid):
         body = request.get_json()
         form_collection.update_one_form(fid, body)
         return '', HTTPStatus.NO_CONTENT
-    except ValueError:
-        return 'Form with id {} does not exist'.format(fid), HTTPStatus.NOT_FOUND
+    except ValueError as e:
+        return str(e), HTTPStatus.NOT_FOUND
 
 
 @app.route('/<fid>', methods=['DELETE'])
@@ -45,8 +45,8 @@ def delete_one_form(fid):
     try:
         form_collection.delete_one_form(fid)
         return '', HTTPStatus.NO_CONTENT
-    except ValueError:
-        return 'Form with id {} does not exist'.format(fid), HTTPStatus.NOT_FOUND
+    except ValueError as e:
+        return str(e), HTTPStatus.NOT_FOUND
 
 
 if __name__ == '__main__':
