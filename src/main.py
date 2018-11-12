@@ -16,31 +16,37 @@ def get_all_forms():
 
 @app.route('/<fid>', methods=['GET'])
 def get_one_form(fid):
-    form = form_collection.get_one_form(fid)
-    return jsonify({'data': form})
+    try:
+        form = form_collection.get_one_form(fid)
+        return jsonify({'data': form})
+    except ValueError:
+        return 'Form with id {} does not exist'.format(fid), HTTPStatus.NOT_FOUND
 
 
 @app.route('/', methods=['POST'])
 def add_form():
     form = request.get_json()
     fid = form_collection.add_form(form)
-    return fid, HTTPStatus.CREATED 
+    return fid, HTTPStatus.CREATED
 
 
 @app.route('/<fid>', methods=['PUT'])
 def update_one_form(fid):
-    body = request.get_json()
-    form_collection.update_one_form(fid, body)
-    return 'Successfully updated document'
+    try:
+        body = request.get_json()
+        form_collection.update_one_form(fid, body)
+        return '', HTTPStatus.NO_CONTENT
+    except ValueError:
+        return 'Form with id {} does not exist'.format(fid), HTTPStatus.NOT_FOUND
 
 
 @app.route('/<fid>', methods=['DELETE'])
 def delete_one_form(fid):
-    successfully_deleted = form_collection.delete_one_form(fid)
-    if successfully_deleted:
+    try:
+        form_collection.delete_one_form(fid)
         return '', HTTPStatus.NO_CONTENT
-    else:
-        return 'Form with id %d does not exist', HTTPStatus.NOT_FOUND
+    except ValueError:
+        return 'Form with id {} does not exist'.format(fid), HTTPStatus.NOT_FOUND
 
 
 if __name__ == '__main__':
