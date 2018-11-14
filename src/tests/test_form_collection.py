@@ -1,6 +1,6 @@
 import unittest
 import mongomock
-from bson import ObjectId
+from bson.objectid import ObjectId
 
 from form_collection import FormCollection
 
