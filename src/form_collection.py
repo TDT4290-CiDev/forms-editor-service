@@ -1,8 +1,6 @@
-from pymongo import MongoClient
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
 
-access_url = 'forms-editor-datastore:27017'
 
 
 def catch_invalid_id(form_operator):
@@ -16,8 +14,8 @@ def catch_invalid_id(form_operator):
 
 class FormCollection:
 
-    def __init__(self):
-        self.client = MongoClient(access_url)
+    def __init__(self, client):
+        self.client = client
         self.db = self.client.cidev_db
         self.form_collection = self.db.form_collection
 
@@ -59,5 +57,4 @@ class FormCollection:
         return True
 
 
-form = FormCollection()
 

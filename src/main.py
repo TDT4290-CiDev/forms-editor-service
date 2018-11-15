@@ -1,11 +1,15 @@
-from flask import Flask, jsonify, request
-from form_collection import FormCollection
 from http import HTTPStatus
+from flask import Flask, jsonify, request
+from pymongo import MongoClient
+
+from form_collection import FormCollection
 
 
 app = Flask(__name__)
 
-form_collection = FormCollection()
+access_url = 'forms-editor-datastore:27017'
+
+form_collection = FormCollection(MongoClient(access_url))
 
 
 @app.route('/', methods=['GET'])
